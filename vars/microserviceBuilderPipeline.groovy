@@ -13,8 +13,8 @@
 
     mavenImage = 'maven:3.5.2-jdk-8'
     dockerImage = 'docker'
-    kubectlImage = 'ibmcom/k8s-kubectl:v1.8.3'
-    helmImage = 'ibmcom/k8s-helm:v2.6.0'
+    kubectlImage = 'nguyendo/k8s-kubectl:v1.9.1'
+    helmImage = 'nguyendo/k8s-helm:v2.7.2-icp'
 
   You can also specify:
 
@@ -51,8 +51,8 @@ def call(body) {
   def image = config.image
   def maven = (config.mavenImage == null) ? 'maven:3.5.2-jdk-8' : config.mavenImage
   def docker = (config.dockerImage == null) ? 'ibmcom/docker:17.10' : config.dockerImage
-  def kubectl = (config.kubectlImage == null) ? 'ibmcom/k8s-kubectl:v1.8.3' : config.kubectlImage
-  def helm = (config.helmImage == null) ? 'ibmcom/k8s-helm:v2.6.0' : config.helmImage
+  def kubectl = (config.kubectlImage == null) ? 'nguyendo/k8s-kubectl:v1.9.1' : config.kubectlImage
+  def helm = (config.helmImage == null) ? 'nguyendo/k8s-helm:v2.7.2-icp' : config.helmImage
   def mvnCommands = (config.mvnCommands == null) ? 'clean package' : config.mvnCommands
   def registry = System.getenv("REGISTRY").trim()
   if (registry && !registry.endsWith('/')) registry = "${registry}/"
@@ -89,6 +89,7 @@ def call(body) {
   if (mavenSettingsConfigMap) {
     volumes += configMapVolume(configMapName: mavenSettingsConfigMap, mountPath: '/msb_mvn_cfg')
   }
+  volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/home/jenkins/.helm')
   print "microserviceBuilderPipeline: volumes = ${volumes}"
 
   podTemplate(
@@ -196,7 +197,7 @@ def call(body) {
           
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
-            def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease}"
+            def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
               deployCommand += " --values chart/overrides.yaml"
             }
@@ -219,7 +220,7 @@ def call(body) {
                   sh "kubectl delete namespace ${testNamespace}"
                   if (fileExists(realChartFolder)) {
                     container ('helm') {
-                      sh "/helm delete ${tempHelmRelease} --purge"
+                      sh "/helm delete ${tempHelmRelease} --purge --tls"
                     }
                   }
                 }
@@ -242,7 +243,7 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
-      def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml"
+      def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
       if (fileExists("chart/overrides.yaml")) {
         deployCommand += " --values chart/overrides.yaml"
       }
