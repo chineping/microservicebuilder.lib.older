@@ -244,6 +244,7 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
+      sh "bx plugin list"
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
       if (fileExists("chart/overrides.yaml")) {
         deployCommand += " --values chart/overrides.yaml"
