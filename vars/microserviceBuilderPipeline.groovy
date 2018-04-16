@@ -198,7 +198,7 @@ def call(body) {
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
             sh "ls -al /home"
-            sh "sudo apt install wget -y"
+            sh "wget https://public.dhe.ibm.com/cloud/bluemix/cli/bluemix-cli/0.6.6/IBM_Cloud_CLI_0.6.6_amd64.tar.gz"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
@@ -247,7 +247,7 @@ def deployProject (String chartFolder, String registry, String image, String ima
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
       sh "ls -al /home"
-      sh "sudo apt install wget -y"
+      sh "wget https://public.dhe.ibm.com/cloud/bluemix/cli/bluemix-cli/0.6.6/IBM_Cloud_CLI_0.6.6_amd64.tar.gz"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
