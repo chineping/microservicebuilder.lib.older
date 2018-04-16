@@ -197,7 +197,9 @@ def call(body) {
           
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
-            sh "bx plugin list"
+            sh "tar -zxvf /IBM_Cloud_CLI_0.6.6_amd64.tar.gz -C /tmp"
+            sh "/tmp/Bluemix_CLI/install_bluemix_cli"
+            sh "bx plugin install /icp-linux-amd64 -f"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
               deployCommand += " --values chart/overrides.yaml"
@@ -244,7 +246,10 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
-      sh "bx plugin list"
+      sh "tar -zxvf /IBM_Cloud_CLI_0.6.6_amd64.tar.gz -C /tmp"
+      sh "/tmp/Bluemix_CLI/install_bluemix_cli"
+      sh "bx plugin install /icp-linux-amd64 -f"
+
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
       if (fileExists("chart/overrides.yaml")) {
         deployCommand += " --values chart/overrides.yaml"
