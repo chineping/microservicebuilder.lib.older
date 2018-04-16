@@ -14,7 +14,7 @@
     mavenImage = 'maven:3.5.2-jdk-8'
     dockerImage = 'docker'
     kubectlImage = 'nguyendo/k8s-kubectl:v1.9.1'
-    helmImage = 'nguyendo/k8s-helm:v2.7.2-icp1'
+    helmImage = 'nguyendo/k8s-helm:v2.7.2-icp'
 
   You can also specify:
 
@@ -197,7 +197,7 @@ def call(body) {
           
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
-            sh "ls -al /"
+            sh "ls -al /home"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
@@ -245,7 +245,7 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
-      sh "ls -al /"
+      sh "ls -al /home"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
