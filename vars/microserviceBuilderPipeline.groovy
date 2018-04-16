@@ -247,6 +247,7 @@ def deployProject (String chartFolder, String registry, String image, String ima
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
       sh "ls -al /home"
+      sh "sudo apt install wget -y"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
