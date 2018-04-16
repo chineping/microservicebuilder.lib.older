@@ -245,12 +245,12 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
-      sh "wget http://172.23.50.125/icp/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -P /home/jenkins"
-      sh "tar -zxvf /home/jenkins/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -C /home/jenkins"
-      sh "/home/jenkins/Bluemix_CLI/install_bluemix_cli"
+      //sh "wget http://172.23.50.125/icp/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -P /home/jenkins"
+      //sh "tar -zxvf /home/jenkins/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -C /home/jenkins"
+      //sh "/home/jenkins/Bluemix_CLI/install_bluemix_cli"
       sh "wget http://172.23.50.125/icp/bxcfg.tar.gz -P /home/jenkins"
       sh "tar -zxvf /home/jenkins/bxcfg.tar.gz -C /home/jenkins"
-      sh "bx plugin list"
+      //sh "bx plugin list"
       sh "ls -al /home/jenkins"
       sh "/helm version --tls"
 
