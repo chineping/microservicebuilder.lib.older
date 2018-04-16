@@ -72,7 +72,7 @@ def call(body) {
   def libertyLicenseJarBaseUrl = (System.getenv("LIBERTY_LICENSE_JAR_BASE_URL") ?: "").trim()
   def libertyLicenseJarName = config.libertyLicenseJarName ?: (System.getenv("LIBERTY_LICENSE_JAR_NAME") ?: "").trim()
   def alwaysPullImage = (System.getenv("ALWAYS_PULL_IMAGE") == null) ? true : System.getenv("ALWAYS_PULL_IMAGE").toBoolean()
-  def mavenSettingsConfigMap = System.getenv("MAVEN_SETTINGS_CONFIG_MAP")?.trim() 
+  def mavenSettingsConfigMap = System.getenv("MAVEN_SETTINGS_CONFIG_MAP")?.trim()
 
   print "microserviceBuilderPipeline: registry=${registry} registrySecret=${registrySecret} build=${build} \
   deploy=${deploy} deployBranch=${deployBranch} test=${test} debug=${debug} namespace=${namespace} \
@@ -137,7 +137,7 @@ def call(body) {
               buildCommand += "--label org.label-schema.schema-version=\"1.0\" "
               def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
               buildCommand += "--label org.label-schema.vcs-url=\"${scmUrl}\" "
-              buildCommand += "--label org.label-schema.vcs-ref=\"${gitCommit}\" "  
+              buildCommand += "--label org.label-schema.vcs-ref=\"${gitCommit}\" "
               buildCommand += "--label org.label-schema.name=\"${image}\" "
               def buildDate = sh(returnStdout: true, script: "date -Iseconds").trim()
               buildCommand += "--label org.label-schema.build-date=\"${buildDate}\" "
@@ -194,10 +194,11 @@ def call(body) {
               giveRegistryAccessToNamespace (testNamespace, registrySecret)
             }
           }
-          
+
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
             sh "ls -al /home"
+            sh "sudo apt install wget -y"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
