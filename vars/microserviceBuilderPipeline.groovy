@@ -91,6 +91,7 @@ def call(body) {
   }
   volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/home/jenkins/.helm')
   volumes += configMapVolume(configMapName: 'bx-cfg', mountPath: '/home/jenkins/.bluemix/plugins/icp')
+  volumes += configMapVolume(configMapName: 'k8auth-script', mountPath: '/home/jenkins')
   print "microserviceBuilderPipeline: volumes = ${volumes}"
 
   podTemplate(
@@ -198,7 +199,8 @@ def call(body) {
 
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
-            sh "ls -al /home"
+            sh "chmod +x /home/jenkins/k8auth.sh"
+            sh "/home/jenkins/k8auth.sh"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
@@ -246,15 +248,8 @@ def deployProject (String chartFolder, String registry, String image, String ima
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
-      //sh "wget http://172.23.50.125/icp/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -P /home/jenkins"
-      //sh "tar -zxvf /home/jenkins/IBM_Cloud_CLI_0.6.6_amd64.tar.gz -C /home/jenkins"
-      //sh "/home/jenkins/Bluemix_CLI/install_bluemix_cli"
-      //sh "wget http://172.23.50.125/icp/bxcfg.tar.gz -P /home/jenkins"
-      //sh "tar -zxvf /home/jenkins/bxcfg.tar.gz -C /home/jenkins"
-      //sh "bx pr login -a https://172.23.52.247:8443 -u admin -p passw0rd -c id-icpcluster-account --skip-ssl-validation"
-      //sh "bx pr cluster-config icpcluster"
-      //sh "bx plugin list"
-      //sh "ls -al /home/jenkins"
+      sh "chmod +x /home/jenkins/k8auth.sh"
+      sh "/home/jenkins/k8auth.sh"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
