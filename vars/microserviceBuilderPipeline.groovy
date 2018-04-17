@@ -199,8 +199,8 @@ def call(body) {
 
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
-            // sh "chmod +x /home/jenkins/k8auth.sh"
-            // sh "/home/jenkins/k8auth.sh"
+            sh "chmod +x /tmp/k8auth.sh"
+            sh "/tmp/k8auth.sh"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
