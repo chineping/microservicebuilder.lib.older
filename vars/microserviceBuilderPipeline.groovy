@@ -91,7 +91,7 @@ def call(body) {
   }
   volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/home/jenkins/.helm')
   volumes += configMapVolume(configMapName: 'bx-cfg', mountPath: '/home/jenkins/.bluemix/plugins/icp')
-  // volumes += configMapVolume(configMapName: 'k8auth-script', mountPath: '/home/jenkins')
+  volumes += configMapVolume(configMapName: 'k8auth-script', mountPath: '/home/jenkins')
   print "microserviceBuilderPipeline: volumes = ${volumes}"
 
   podTemplate(
