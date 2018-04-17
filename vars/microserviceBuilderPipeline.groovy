@@ -200,7 +200,8 @@ def call(body) {
           container ('helm') {
             sh "/helm init --client-only --skip-refresh"
             sh "chmod +x /tmp/k8auth.sh"
-            sh "/tmp/k8auth.sh"
+            sh "ls /tmp/k8auth.sh"
+            sh "/bin/bash /tmp/k8auth.sh"
             sh "/helm version --tls"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease} --tls"
             if (fileExists("chart/overrides.yaml")) {
@@ -249,7 +250,8 @@ def deployProject (String chartFolder, String registry, String image, String ima
     container ('helm') {
       sh "/helm init --client-only --skip-refresh"
       sh "chmod +x /tmp/k8auth.sh"
-      sh "/tmp/k8auth.sh"
+      sh "ls /tmp/k8auth.sh"
+      sh "/bin/bash /tmp/k8auth.sh"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
