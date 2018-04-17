@@ -247,11 +247,11 @@ def call(body) {
 
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
-    container ('kubectl') {
-      sh "chmod +x /tmp/k8auth.sh"
-      sh "ls /tmp/k8auth.sh"
-      sh "dos2unix /tmp/k8auth.sh"
+    container ('kubectl') {    
       script {
+        sh "chmod +x /tmp/k8auth.sh"
+        sh "ls /tmp/k8auth.sh"
+        sh "dos2unix /tmp/k8auth.sh"
         sh "/tmp/k8auth.sh"
       }
       // sh "export USER=admin"
