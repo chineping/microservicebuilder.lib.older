@@ -251,7 +251,9 @@ def deployProject (String chartFolder, String registry, String image, String ima
       sh "chmod +x /tmp/k8auth.sh"
       sh "ls /tmp/k8auth.sh"
       sh "dos2unix /tmp/k8auth.sh"
-      sh "/tmp/k8auth.sh"
+      script {
+        sh "/tmp/k8auth.sh"
+      }
       // sh "export USER=admin"
       // sh "export PWD=passw0rd"
       // sh "export MASTER_IP=172.23.52.247"
