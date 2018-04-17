@@ -248,9 +248,9 @@ def call(body) {
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('kubectl') {
-      "chmod +x /tmp/k8auth.sh".execute()
+      sh "chmod +x /tmp/k8auth.sh"
       sh "ls /tmp/k8auth.sh"
-      "/tmp/k8auth.sh".execute()
+      sh "/tmp/k8auth.sh"
     }
 
     container ('helm') {
