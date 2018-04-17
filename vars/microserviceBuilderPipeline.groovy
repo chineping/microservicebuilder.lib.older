@@ -247,11 +247,14 @@ def call(body) {
 
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
-    container ('helm') {
-      sh "/helm init --client-only --skip-refresh"
+    container ('kubectl') {
       sh "chmod +x /tmp/k8auth.sh"
       sh "ls /tmp/k8auth.sh"
-      sh "/bin/bash /tmp/k8auth.sh"
+      sh "/tmp/k8auth.sh"
+    }
+
+    container ('helm') {
+      sh "/helm init --client-only --skip-refresh"
       sh "/helm version --tls"
 
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml --tls"
