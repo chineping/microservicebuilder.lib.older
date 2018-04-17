@@ -248,19 +248,20 @@ def call(body) {
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('kubectl') {
-      // sh "chmod +x /tmp/k8auth.sh"
-      // sh "ls /tmp/k8auth.sh"
-      // sh "/tmp/k8auth.sh"
-      sh "export USER=admin"
-      sh "export PWD=passw0rd"
-      sh "export MASTER_IP=172.23.52.247"
-      sh "export CLUSTER_NAME=icpcluster.icp"
-      sh "export ID_TOKEN=$(curl -k -H \"Content-Type: application/x-www-form-urlencoded;charset=UTF-8\" -d \"grant_type=password&username=$USER&password=$PWD&scope=openid\" https://$MASTER_IP:8443/idprovider/v1/auth/identitytoken --insecure \| tr ',' '\\n' \| grep id_token \| cut -d'\"' -f4)"
-      sh "/kubectl config set-cluster $CLUSTER_NAME --server=https://$MASTER_IP:8001 --insecure-skip-tls-verify=true"
-      sh "/kubectl config set-context $CLUSTER_NAME'-context' --cluster=$CLUSTER_NAME"
-      sh "/kubectl config set-credentials $USER --token=$ID_TOKEN"
-      sh "/kubectl config set-context $CLUSTER_NAME'-context' --user=$USER --namespace=default"
-      sh "/kubectl config use-context $CLUSTER_NAME'-context'"
+      sh "chmod +x /tmp/k8auth.sh"
+      sh "ls /tmp/k8auth.sh"
+      sh "dos2unix /tmp/k8auth.sh"
+      sh "/tmp/k8auth.sh"
+      // sh "export USER=admin"
+      // sh "export PWD=passw0rd"
+      // sh "export MASTER_IP=172.23.52.247"
+      // sh "export CLUSTER_NAME=icpcluster.icp"
+      // sh "export ID_TOKEN=$(curl -k -H \"Content-Type: application/x-www-form-urlencoded;charset=UTF-8\" -d \"grant_type=password&username=$USER&password=$PWD&scope=openid\" https://$MASTER_IP:8443/idprovider/v1/auth/identitytoken --insecure \| tr ',' '\\n' \| grep id_token \| cut -d'\"' -f4)"
+      // sh "/kubectl config set-cluster $CLUSTER_NAME --server=https://$MASTER_IP:8001 --insecure-skip-tls-verify=true"
+      // sh "/kubectl config set-context $CLUSTER_NAME'-context' --cluster=$CLUSTER_NAME"
+      // sh "/kubectl config set-credentials $USER --token=$ID_TOKEN"
+      // sh "/kubectl config set-context $CLUSTER_NAME'-context' --user=$USER --namespace=default"
+      // sh "/kubectl config use-context $CLUSTER_NAME'-context'"
     }
 
     container ('helm') {
