@@ -199,6 +199,7 @@ def call(body) {
           }
           
           container ('helm') {
+            sh "chmod 755 -R /home/jenkins/.helm"
             sh "/helm init --client-only --skip-refresh"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease}"
             if (fileExists("chart/overrides.yaml")) {
@@ -245,6 +246,7 @@ def call(body) {
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
+      sh "chmod 755 -R /home/jenkins/.helm"
       sh "/helm init --client-only --skip-refresh"
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml"
       if (fileExists("chart/overrides.yaml")) {
