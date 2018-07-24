@@ -13,8 +13,8 @@
 
     mavenImage = 'maven:3.5.2-jdk-8'
     dockerImage = 'docker'
-    kubectlImage = 'nguyendo/k8s-kubectl:v1.9.1'
-    helmImage = 'nguyendo/k8s-helm:v2.7.2-icp'
+    kubectlImage = 'nguyendo/k8s-kubectl:v1.10'
+    helmImage = 'nguyendo/k8s-helm:v2.7.3-icp'
 
   You can also specify:
 
