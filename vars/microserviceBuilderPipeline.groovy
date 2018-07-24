@@ -89,6 +89,8 @@ def call(body) {
   if (mavenSettingsConfigMap) {
     volumes += configMapVolume(configMapName: mavenSettingsConfigMap, mountPath: '/msb_mvn_cfg')
   }
+  volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/home/jenkins/.helm')
+  volumes += configMapVolume(configMapName: 'bx-cfg', mountPath: '/home/jenkins/.bluemix/plugins/icp')
   print "microserviceBuilderPipeline: volumes = ${volumes}"
 
   podTemplate(
