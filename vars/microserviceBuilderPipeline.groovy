@@ -89,7 +89,7 @@ def call(body) {
   if (mavenSettingsConfigMap) {
     volumes += configMapVolume(configMapName: mavenSettingsConfigMap, mountPath: '/msb_mvn_cfg')
   }
-  volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/home/jenkins/.helm')
+  volumes += configMapVolume(configMapName: 'helm-tls', mountPath: '/tmp/.helm')
   volumes += configMapVolume(configMapName: 'bx-cfg', mountPath: '/home/jenkins/.bluemix/plugins/icp')
   print "microserviceBuilderPipeline: volumes = ${volumes}"
 
@@ -199,8 +199,8 @@ def call(body) {
           }
           
           container ('helm') {
-            sh "chmod 755 -R /home/jenkins/.helm"
             sh "/helm init --client-only --skip-refresh"
+            sh "cp /tmp/.helm/* /home/jenkins/.helm/"
             def deployCommand = "/helm install ${realChartFolder} --wait --set test=true --values pipeline.yaml --namespace ${testNamespace} --name ${tempHelmRelease}"
             if (fileExists("chart/overrides.yaml")) {
               deployCommand += " --values chart/overrides.yaml"
@@ -246,8 +246,8 @@ def call(body) {
 def deployProject (String chartFolder, String registry, String image, String imageTag, String namespace, String manifestFolder) {
   if (chartFolder != null && fileExists(chartFolder)) {
     container ('helm') {
-      sh "chmod 755 -R /home/jenkins/.helm"
       sh "/helm init --client-only --skip-refresh"
+      sh "cp /tmp/.helm/* /home/jenkins/.helm/"
       def deployCommand = "/helm upgrade --install --wait --values pipeline.yaml"
       if (fileExists("chart/overrides.yaml")) {
         deployCommand += " --values chart/overrides.yaml"
